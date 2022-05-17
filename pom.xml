@@ -143,6 +143,7 @@
 			</plugin>
 			-->
 		</plugins>
+		<finalName>mentors-nexus-backend</finalName>
 	</build>
 
 </project>
