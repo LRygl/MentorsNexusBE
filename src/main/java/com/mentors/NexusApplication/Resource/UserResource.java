@@ -130,15 +130,15 @@ public class UserResource {
 
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody User user) throws UserNotFoundException, EmailExistsException, UsernameExistsException, MessagingException {
-        User newUser = userService.register(user.getUserFirstName(), user.getUserLastName(), user.getUsername(), user.getUserEmail());
+        User newUser = userService.register(user.getUserFirstName(), user.getUserLastName(), user.getUserEmail());
         LOGGER.debug("Registered a new user " + newUser);
         return new ResponseEntity<>(newUser, HttpStatus.OK);
     }
 
     @PostMapping("/login")
     public ResponseEntity<User> login(@RequestBody User user) {
-        authenticate(user.getUsername(), user.getUserPassword());
-        User loginUser = userService.findUserByUsername(user.getUsername());
+        authenticate(user.getUserEmail(), user.getUserPassword());
+        User loginUser = userService.findUserByEmail(user.getUserEmail());
         UserPrincipal userPrincipal = new UserPrincipal((loginUser));
         HttpHeaders jwtHeader = getJwtHeader(userPrincipal);
         LOGGER.info("Logged in a new user with principal " + userPrincipal + " and token  " + jwtHeader + " for user " + loginUser);

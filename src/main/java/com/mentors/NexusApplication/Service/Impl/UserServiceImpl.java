@@ -136,15 +136,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User register(String firstName, String lastName, String username, String email) throws UserNotFoundException, EmailExistsException, UsernameExistsException, MessagingException {
-        validateNewUsernameAndEmail(StringUtils.EMPTY, username,email);
+    public User register(String firstName, String lastName, String email) throws UserNotFoundException, EmailExistsException, UsernameExistsException, MessagingException {
+        //validateNewUsernameAndEmail(StringUtils.EMPTY,email);
         User user = new User();
         //user.setUserId(generateUserId());
 
         String password = generatePassword();
         user.setUserFirstName(firstName);
         user.setUserLastName(lastName);
-        user.setUsername(username);
         user.setUserEmail(email);
         user.setUserJoinDate(new Date());
         user.setUserPassword(encodePassword(password));
@@ -152,12 +151,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setNotLocked(true);
         user.setUserRole(ROLE_USER.name());
         user.setUserAuthorities(ROLE_USER.getAuthorities());
-        user.setUserProfileImageUrl(getTemporaryProfileImageUrl(username));
+        user.setUserProfileImageUrl(getTemporaryProfileImageUrl(email));
         userRepository.save(user);
-        logger.info("New user created " + username + " " + user.getId());
+        logger.info("New user created " + email + " " + user.getId());
         logger.info("User Password is " + password);
         /*emailService.sendNewPasswordEmail(firstName,password,email);*/
-        logger.info(NEW_USER_WAS_SUCCESSFULY_CREATED + username + (user.getId()) + ") with email " + email);
+        logger.info(NEW_USER_WAS_SUCCESSFULY_CREATED + email + (user.getId()) + ") with email " + email);
         return user;
     }
 
