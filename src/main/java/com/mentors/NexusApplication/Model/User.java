@@ -19,7 +19,6 @@ public class User {
     private Long id;
     private String userFirstName;
     private String userLastName;
-    private String username;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String userPassword;
     private String userEmail;
@@ -51,11 +50,10 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String userFirstName, String userLastName, String username, String userPassword, String userEmail, String userCompany, String userProfileImageUrl, String userRole, String[] userAuthorities, Date userLastLoginDate, Date userLastLoginDateDisplay, Date userJoinDate, Date userLastUpdatedDate, Boolean isActive, Boolean isNotLocked, Set<Course> enrolledCourses, Set<Course> ownedCourses) {
+    public User(Long id, String userFirstName, String userLastName, String userPassword, String userEmail, String userCompany, String userProfileImageUrl, String userRole, String[] userAuthorities, Date userLastLoginDate, Date userLastLoginDateDisplay, Date userJoinDate, Date userLastUpdatedDate, Boolean isActive, Boolean isNotLocked, Set<Course> enrolledCourses, Set<Course> ownedCourses) {
         this.id = id;
         this.userFirstName = userFirstName;
         this.userLastName = userLastName;
-        this.username = username;
         this.userPassword = userPassword;
         this.userEmail = userEmail;
         this.userCompany = userCompany;
@@ -94,14 +92,6 @@ public class User {
 
     public void setUserLastName(String userLastName) {
         this.userLastName = userLastName;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getUserPassword() {

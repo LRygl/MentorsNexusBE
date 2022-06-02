@@ -54,7 +54,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         //no csrf ... add cors - session management = stateless + specify public urls that can be accessed
-        http.csrf().disable().cors().and()
+        http.formLogin().loginPage("/login").usernameParameter("email").permitAll().and().csrf().disable().cors().and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeRequests().antMatchers(SecurityConstant.PUBLIC_URLS).permitAll()

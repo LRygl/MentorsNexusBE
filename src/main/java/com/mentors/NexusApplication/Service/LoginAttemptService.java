@@ -27,23 +27,23 @@ public class LoginAttemptService {
                 });
     }
 
-    public void evictUserFromLoginAttemptCache(String username){
-        loginAttemptCache.invalidate(username);
+    public void evictUserFromLoginAttemptCache(String userEmail){
+        loginAttemptCache.invalidate(userEmail);
     }
 
-    public void addUserToLoginAttemptCache(String username) {
+    public void addUserToLoginAttemptCache(String userEmail) {
         int attempts = 0;
         try {
-            attempts = ATTEMPT_INCREMENT + loginAttemptCache.get(username);
+            attempts = ATTEMPT_INCREMENT + loginAttemptCache.get(userEmail);
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        loginAttemptCache.put(username, attempts);
+        loginAttemptCache.put(userEmail, attempts);
     }
 
-    public boolean hasExceededMaxAttempts(String username) {
+    public boolean hasExceededMaxAttempts(String userEmail) {
         try {
-            return loginAttemptCache.get(username) >= MAXIMUM_NUMBER_OF_ATTEMPT ;
+            return loginAttemptCache.get(userEmail) >= MAXIMUM_NUMBER_OF_ATTEMPT ;
         } catch (ExecutionException e) {
             e.printStackTrace();
         }

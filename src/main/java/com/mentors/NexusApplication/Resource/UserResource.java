@@ -66,7 +66,7 @@ public class UserResource {
                                            @RequestParam("isActive") String isActive,
                                            @RequestParam("isNonLocked") String isNonLocked,
                                            @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) throws UserNotFoundException, EmailExistsException, UsernameExistsException, IOException {
-        User newUser = userService.addNewUser(firstName, lastName, username, email, role, Boolean.parseBoolean(isActive) ,Boolean.parseBoolean(isNonLocked), profileImage);
+        User newUser = userService.addNewUser(firstName, lastName, email, role, Boolean.parseBoolean(isActive) ,Boolean.parseBoolean(isNonLocked), profileImage);
         LOGGER.debug("Returning all users");
         return new ResponseEntity<>(newUser, HttpStatus.OK);
     }
@@ -90,7 +90,7 @@ public class UserResource {
                                        @RequestParam("isActive") String isActive,
                                        @RequestParam("isNonLocked") String isNonLocked,
                                        @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) throws UserNotFoundException, EmailExistsException, UsernameExistsException, IOException {
-        User updateUser = userService.updateUser(currentUsername, firstName, lastName, username, email, role, Boolean.parseBoolean(isActive) ,Boolean.parseBoolean(isNonLocked), profileImage);
+        User updateUser = userService.updateUser(firstName, lastName, username, email, role, Boolean.parseBoolean(isActive) ,Boolean.parseBoolean(isNonLocked), profileImage);
         return new ResponseEntity<>(updateUser, HttpStatus.OK);
     }
 
@@ -146,7 +146,7 @@ public class UserResource {
     }
     @PostMapping("/resetpassword")
     public ResponseEntity<User> resetUserPassword(@RequestBody User user) throws EmailNotFoundException, MessagingException, PasswordResetException {
-        userService.resetUserPassword(user.getUserEmail(), user.getUsername());
+        userService.resetUserPassword(user.getUserEmail());
         LOGGER.info("Reseting user password");
         return new ResponseEntity<>(null,null,HttpStatus.OK);
     }
@@ -160,8 +160,8 @@ public class UserResource {
         return headers;
     }
 
-    private void authenticate(String username, String password) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username,password));
+    private void authenticate(String userEmail, String userPassword) {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userEmail,userPassword));
     }
 
 }

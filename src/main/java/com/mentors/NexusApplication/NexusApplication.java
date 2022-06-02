@@ -34,7 +34,7 @@ public class NexusApplication {
 	@Bean
 	CommandLineRunner run(UserService userService) {
 		return args -> {
-			userService.addAdminUser("Admin","Admin","MentorsAdmin","info@mentors.cz");
+			userService.addAdminUser("Admin","Admin","info@mentors.cz");
 		};
 	}
 
