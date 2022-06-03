@@ -94,6 +94,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userRepository.findUserByUserEmail(email);
     }
 
+    public Boolean userExistsByEmail(String userEmail) throws EmailExistsException {
+        User result = userRepository.findUserByUserEmail((userEmail));
+        if(userRepository.findUserByUserEmail(userEmail)==null){
+            return false;
+        } else
+            throw new EmailExistsException("EMAIL EXISTS");
+    }
+
     @Override
     public Boolean deleteUserById(Long id) {
         userRepository.deleteById(id);
@@ -131,32 +139,32 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User register(String firstName, String lastName, String email) throws UserNotFoundException, EmailExistsException, UsernameExistsException, MessagingException {
-        //validateNewUsernameAndEmail(StringUtils.EMPTY,email);
+    public User register(String firstName, String lastName, String userEmail) throws UserNotFoundException, EmailExistsException, UsernameExistsException, MessagingException, EmailNotFoundException {
+        userExistsByEmail(userEmail);
         User user = new User();
         //user.setUserId(generateUserId());
 
         String password = generatePassword();
         user.setUserFirstName(firstName);
         user.setUserLastName(lastName);
-        user.setUserEmail(email);
+        user.setUserEmail(userEmail);
         user.setUserJoinDate(new Date());
         user.setUserPassword(encodePassword(password));
         user.setActive(true);
         user.setNotLocked(true);
         user.setUserRole(ROLE_USER.name());
         user.setUserAuthorities(ROLE_USER.getAuthorities());
-        user.setUserProfileImageUrl(getTemporaryProfileImageUrl(email));
+        user.setUserProfileImageUrl(getTemporaryProfileImageUrl(userEmail));
         userRepository.save(user);
-        logger.info("New user created " + email + " " + user.getId());
+        logger.info("New user created " + userEmail + " " + user.getId());
         logger.info("User Password is " + password);
         /*emailService.sendNewPasswordEmail(firstName,password,email);*/
-        logger.info(NEW_USER_WAS_SUCCESSFULY_CREATED + email + (user.getId()) + ") with email " + email);
+        logger.info(NEW_USER_WAS_SUCCESSFULY_CREATED + userEmail + (user.getId()) + ") with email " + userEmail);
         return user;
     }
 
     @Override
-    public User addNewUser(String firstName, String lastName, String userEmail, String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage) throws UserNotFoundException, EmailExistsException, UsernameExistsException, IOException {
+    public User addNewUser(String firstName, String lastName, String userEmail, String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage) throws UserNotFoundException, EmailExistsException, UsernameExistsException, IOException, EmailNotFoundException {
         validateNewEmail(userEmail);
         User user = new User();
         String password = generateUserPassword();
@@ -189,6 +197,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setUserRole(getRoleEnumName("ROLE_SUPER_ADMIN").name());
         user.setUserAuthorities(getRoleEnumName("ROLE_SUPER_ADMIN").getAuthorities());
         //user.setUserProfileImageUrl(getTemporaryProfileImageUrl(username));
+        logger.info(encodedPassword);
         userRepository.save(user);
     }
 
@@ -227,8 +236,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private @Nullable User validateNewEmail(String userEmail) throws EmailExistsException, UserNotFoundException {
         User user = findUserByEmail(userEmail);
-
-
         if(StringUtils.isNotBlank(userEmail)) {
             //User with username does not exist
             if (user == null){

@@ -16,8 +16,8 @@ public interface UserService {
 
     Page<User> getUserPaginationAndSorting(Integer page, Integer pageSize,String sortDirection, String sortBy);
 
-    User register(String firstName, String lastName, String email) throws UserNotFoundException, EmailExistsException, UsernameExistsException, MessagingException;
-    User addNewUser(String firstName, String lastName, String email, String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage) throws UserNotFoundException, EmailExistsException, UsernameExistsException, IOException, UserNotFoundException;
+    User register(String firstName, String lastName, String email) throws UserNotFoundException, EmailExistsException, UsernameExistsException, MessagingException, EmailNotFoundException;
+    User addNewUser(String firstName, String lastName, String email, String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage) throws UserNotFoundException, EmailExistsException, UsernameExistsException, IOException, UserNotFoundException, EmailNotFoundException;
     User updateUser(String currentUsername, String newFirstName, String newLastName, String newEmail, String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage) throws UserNotFoundException, EmailExistsException, UsernameExistsException, IOException;
     User findUserByEmail(String email);
     User enrollUserToCourse(Long courseId, Long userId) throws ResourceNotFoundException;

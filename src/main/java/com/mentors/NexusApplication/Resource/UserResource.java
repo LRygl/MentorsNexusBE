@@ -65,7 +65,7 @@ public class UserResource {
                                            @RequestParam("role") String role,
                                            @RequestParam("isActive") String isActive,
                                            @RequestParam("isNonLocked") String isNonLocked,
-                                           @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) throws UserNotFoundException, EmailExistsException, UsernameExistsException, IOException {
+                                           @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) throws UserNotFoundException, EmailExistsException, UsernameExistsException, IOException, EmailNotFoundException {
         User newUser = userService.addNewUser(firstName, lastName, email, role, Boolean.parseBoolean(isActive) ,Boolean.parseBoolean(isNonLocked), profileImage);
         LOGGER.debug("Returning all users");
         return new ResponseEntity<>(newUser, HttpStatus.OK);
@@ -124,12 +124,11 @@ public class UserResource {
             @PathVariable(value="userId") Long userId)
     {
         User course = userService.removeUserFromCourse(courseId,userId);
-
         return new ResponseEntity<>(course,HttpStatus.OK);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody User user) throws UserNotFoundException, EmailExistsException, UsernameExistsException, MessagingException {
+    public ResponseEntity<User> register(@RequestBody User user) throws UserNotFoundException, EmailExistsException, UsernameExistsException, MessagingException, EmailNotFoundException {
         User newUser = userService.register(user.getUserFirstName(), user.getUserLastName(), user.getUserEmail());
         LOGGER.debug("Registered a new user " + newUser);
         return new ResponseEntity<>(newUser, HttpStatus.OK);
@@ -150,7 +149,6 @@ public class UserResource {
         LOGGER.info("Reseting user password");
         return new ResponseEntity<>(null,null,HttpStatus.OK);
     }
-
 
     //PRIVATE METHODS
     private HttpHeaders getJwtHeader(UserPrincipal userPrincipal) {
