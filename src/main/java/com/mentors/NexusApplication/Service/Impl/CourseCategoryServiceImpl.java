@@ -26,7 +26,7 @@ public class CourseCategoryServiceImpl implements CourseCategoryService {
         this.courseRepository = courseRepository;
     }
 
-    public CourseCategory findCourseCategoryById(Long id){
+    public CourseCategory getCourseCategoryById(Long id){
         return courseCategoryRepository.findCourseCategoryById(id);
     }
 
@@ -86,7 +86,7 @@ public class CourseCategoryServiceImpl implements CourseCategoryService {
     }
 
     private CourseCategory validateIfCourseCategoryExistsById(Long id) throws CourseCategoryNotFoundException {
-        CourseCategory courseCategory = findCourseCategoryById(id);
+        CourseCategory courseCategory = getCourseCategoryById(id);
         if( courseCategory == null ){
             throw new CourseCategoryNotFoundException("No course with id found");
         }

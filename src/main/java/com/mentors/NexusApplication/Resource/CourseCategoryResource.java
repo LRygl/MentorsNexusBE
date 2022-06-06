@@ -26,6 +26,12 @@ public class CourseCategoryResource {
         return new ResponseEntity<>(courseCategories, HttpStatus.OK);
     }
 
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<CourseCategory> getCourseCategoryById(@PathVariable(value = "id") Long courseCategoryId){
+        CourseCategory courseCategory = courseCategoryService.getCourseCategoryById(courseCategoryId);
+        return new ResponseEntity<>(courseCategory, HttpStatus.OK);
+    }
+
     @PostMapping(path = "/add")
     public ResponseEntity<CourseCategory> createNewCourseCategory(
         @RequestParam(value = "courseCategoryName") String courseCategoryName,
