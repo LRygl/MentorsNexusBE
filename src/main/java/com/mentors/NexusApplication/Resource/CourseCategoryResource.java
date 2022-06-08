@@ -6,6 +6,7 @@ import com.mentors.NexusApplication.Model.CourseCategory;
 import com.mentors.NexusApplication.Service.CourseCategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,17 +33,23 @@ public class CourseCategoryResource {
         return new ResponseEntity<>(courseCategory, HttpStatus.OK);
     }
 
-    @PostMapping(path = "/add")
+   /* @PostMapping(path = "/add")
     public ResponseEntity<CourseCategory> createNewCourseCategory(
-        @RequestParam(value = "courseCategoryName") String courseCategoryName,
-        @RequestParam(value = "courseCategoryDescription") String courseCategoryDescription,
-        @RequestParam(value = "courseCategoryIsActive") Boolean courseCategoryIsActive,
-        @RequestParam(value = "courseCategoryCode") String courseCategoryCode
-        ){
+            @RequestParam(value = "courseCategoryName") String courseCategoryName,
+            @RequestParam(value = "courseCategoryDescription") String courseCategoryDescription,
+            @RequestParam(value = "courseCategoryIsActive") Boolean courseCategoryIsActive,
+            @RequestParam(value = "courseCategoryCode") String courseCategoryCode
+    ){
 
         CourseCategory newCourseCategory = courseCategoryService.addNewCourseCategory(courseCategoryName,courseCategoryDescription,courseCategoryCode,courseCategoryIsActive);
         return new ResponseEntity<>(newCourseCategory,HttpStatus.OK);
-        }
+    }*/
+
+    @PostMapping(path = "/add")
+    public ResponseEntity<CourseCategory> createNewCourseCategory(@RequestBody CourseCategory courseCategory){
+        CourseCategory newCourseCategory = courseCategoryService.addNewCourseCategory(courseCategory.getCourseCategoryName(),courseCategory.getCourseCategoryDescription(),courseCategory.getCourseCategoryCode(),courseCategory.getCourseCategoryActive());
+        return new ResponseEntity<>(newCourseCategory,HttpStatus.OK);
+    }
 
     @PutMapping(path = "/update")
     public ResponseEntity<CourseCategory> updateCourseCategory(@RequestBody CourseCategory courseCategory) throws CourseCategoryNotFoundException {
@@ -72,9 +79,8 @@ public class CourseCategoryResource {
             ) Long courseCategoryId) throws ResourceNotFoundException {
         CourseCategory courseCategory1 = courseCategoryService.addCourseCagoryToCourse(courseId,courseCategoryId);
         return new ResponseEntity<>(courseCategory1,HttpStatus.OK);
-
     }
-
+    @PreAuthorize("hasAnyAuthority('category:delete')")
     @DeleteMapping(path = "/{id}/delete")
     public boolean deleteCourseCategory(@PathVariable(value = "id") Long courseCategoryId){
         courseCategoryService.deleteCourseCategoryById(courseCategoryId);
